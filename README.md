@@ -1,153 +1,282 @@
-# A New Paradigm of Face Verification: Identity Through Relational Patterns, Not Absolute Values
+==========================================================
+IMG — Relational Pattern-Based Similarity Metric
+A Universal Similarity Metric for Computer Vision
+==========================================================
 
-> *In Javanese, one expresses gratitude as "matur suwun"; in Sundanese, the same sentiment is conveyed as "hatur nuhun". Despite different surface structures, both phrases encode identical meaning through internally consistent relational patterns. This linguistic observation from two major languages of Indonesia inspired the central hypothesis of this work: that identity can be encoded through consistent relational patterns rather than absolute values.*
-
-**Author:** Imam Ghozali — Independent Researcher  
-**Contact:** imam.gh98@gmail.com
-
----
-
-## Overview
-
-IMGNet is a lightweight face verification model built around a novel **Sliding Window (SW) Block** that replaces the first convolutional layer with a multi-scale relational operation. Instead of dot products on absolute pixel values, SW Block computes learnable functions of pixel *differences* at three prime scales (3×3, 5×5, 7×7), making it illumination-robust by design.
-
-Three novel similarity metrics are introduced:
-
-| Metric | Description | Range |
-|--------|-------------|-------|
-| **IMG Sign Score** | Sliding window sign pattern matching (no amplitude) | 0–1 |
-| **AMP IMG Score** | Sign pattern × amplitude consistency | 0–1 |
-| **Chain Score** | Quality of contiguous match runs (reward/punish) | 0–1 |
-
-All three metrics share a single threshold derived from IMG Sign Score sweep — AMP and Chain use the same threshold value.
-
----
-
-## Architecture — SW357 + Conv10 (1SW + 10Conv)
-
-```
-SW1    : 112×112 → 56×56   (SW Block, windows [3,5,7])
-Conv2  : 56×56  → 56×56   (stride=1)
-Conv3  : 56×56  → 28×28   (stride=2)
-Conv4  : 28×28  → 28×28   (stride=1)
-Conv5  : 28×28  → 28×28   (stride=1)
-Conv6  : 28×28  → 14×14   (stride=2)
-Conv7  : 14×14  → 14×14   (stride=1)
-Conv8  : 14×14  → 14×14   (stride=1)
-Conv9  : 14×14  → 7×7     (stride=2)
-Conv10 : 7×7   → 7×7     (stride=1)
-GAP → FC(256→1024) → BN
-```
-
-**Parameters:** 2,774,176 (~10.58 MB FP32, ~5.29 MB FP16)
-
----
-
-## Results
-
-### Benchmark (LFW pre-aligned 112×112, epoch 39 plateau)
-
-| Dataset | IMG Sign | AMP | Chain | Vote 1/3 | Vote 2/3 | Cosine |
-|---------|----------|-----|-------|----------|----------|--------|
-| LFW | **96.27%** | 90.45% | 95.12% | **96.27%** | 95.13% | 95.53% |
-| AgeDB-30 | 78.80% | 74.22% | 72.87% | 78.80% | 74.73% | 77.22% |
-| CALFW | 78.73% | 74.92% | 76.87% | 78.73% | 77.15% | 78.32% |
-| CPLFW | 76.85% | 68.88% | 75.23% | 76.85% | 75.25% | 74.62% |
-| Combined | 81.02% | 77.41% | 79.30% | 81.02% | 79.47% | 79.49% |
-
-*Trained on CASIA-WebFace (490k images, 10,572 identities)*  
-*Threshold from IMG Sign Score sweep — AMP and Chain use the same threshold*
-
-### Comparison with Pretrained Models
-
-| Model | Dataset | LFW | Params |
-|-------|---------|-----|--------|
-| MobileNetV2 | MS1MV2 | 99.55% | 2.29M |
-| **IMGNet Conv10** | **CASIA 490k** | **96.27%** | **2.77M** |
-| MobileNetV1_0.25 | MS1MV2 | 98.76% | 0.36M |
-
----
-
-## Datasets
-
-| Dataset | Link | Description |
-|---------|------|-------------|
-| CASIA-WebFace aligned | [Kaggle](https://www.kaggle.com/datasets/luongkhang04/aligned-casia) | Training dataset, aligned & cropped, 490k images, 10,572 identities |
-| Benchmark (LFW/AgeDB/CALFW/CPLFW) | [Kaggle](https://www.kaggle.com/datasets/yakhyokhuja/agedb-30-calfw-cplfw-lfw-aligned-112x112) | Validation datasets, pre-aligned 112×112 |
-
-```
-train/
-  train_sw357_conv10_imgsign_a100.py  — Training on A100/Colab
-  train_eval_sw357_conv10_gtx.py      — 1-epoch test on GTX
-  train_eval_sw357_conv13_gtx.py      — Conv13 variant test
-  precrop_casia.py                    — Pre-crop CASIA with MTCNN
-
-eval/
-  eval_lfw_gtx_chain_conv10.py        — Eval Conv10 + Chain Score (GTX)
-  eval_lfw_gtx_imgsign_conv10.py      — Eval Conv10 IMG Sign (GTX)
-  eval_benchmarks_a100.py             — Multi-dataset benchmark (A100)
-  eval_metric_comparison_a100.py      — FaceNet/ArcFace metric test
-
-app/
-  face_compare_conv10.py              — Desktop UI comparison app (tkinter)
-```
-
----
-
-## Quickstart
-
-### 1. Install dependencies
-
-```bash
-pip install torch torchvision facenet-pytorch insightface Pillow numpy scikit-learn
-```
-
-### 2. Download checkpoint
-
-Place `best_model_epoch39_plateau.pth` in your working directory.
-
-### 3. Eval on LFW
-
-```bash
-# Edit CKPT_PATH and LFW_DIR in the script first
-python eval_lfw_gtx_imgsign_conv10.py
-```
-
-### 4. Run comparison app
-
-```bash
-python face_compare_conv10.py
-```
-
----
-
-## Voting System
-
-Three metrics, one threshold (from IMG Sign sweep):
-
-```
-2/3 or 3/3 pass → ✅ MATCH
-1/3 pass        → ⚠️  UNCERTAIN
-0/3 pass        → ❌ DIFFERENT
-```
-
----
+Author
+------
+Imam Ghozali
+Independent Researcher
+imam.gh98@gmail.com
 
 
----
+Overview
+--------
 
-## Citation
+Traditional similarity metrics such as cosine similarity compare
+embedding vectors through global angular relationships.
 
-```
-Ghozali, I. (2026). IMG: Index-Based Match Scoring with Grade — 
-A Novel Similarity Metric for Face Verification. 
-Zenodo. https://doi.org/10.5281/zenodo.20748457
-```
+IMG introduces a different paradigm.
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20748457.svg)](https://zenodo.org/records/20748457)
+Instead of comparing absolute vector values, IMG compares
+local relational patterns inside the embedding.
 
----
+The proposed framework consists of three complementary metrics:
 
-## License
+1. IMG Sign Score
+2. AMP IMG Score
+3. Chain Score
 
-MIT License
+These metrics are architecture-independent and can be applied
+to embeddings generated by different deep learning models.
+
+This work does NOT propose replacing cosine similarity.
+
+Instead, IMG is proposed as an alternative similarity metric.
+
+Experimental results suggest that the optimal similarity metric
+depends on how the embedding itself is learned.
+
+----------------------------------------------------------
+
+Key Idea
+--------
+
+Cosine Similarity
+    compares global vector direction.
+
+IMG Sign
+    compares local relational sign patterns.
+
+AMP IMG
+    compares relational patterns together with local amplitude consistency.
+
+Chain Score
+    evaluates the continuity of matching relational patterns.
+
+----------------------------------------------------------
+
+Architecture Used in This Paper
+-------------------------------
+
+SW357 Block
++
+
+Conv2
+Conv3
+Conv4
+Conv5
+Conv6
+Conv7
+Conv8
+Conv9
+Conv10
+
+Global Average Pooling
+
+FC
+
+BatchNorm
+
+Parameters
+
+2,774,176
+
+Model Size
+
+10.58 MB (FP32)
+
+Training Dataset
+
+CASIA-WebFace
+490k aligned images
+10,572 identities
+
+----------------------------------------------------------
+
+Benchmark
+----------------------------------------------------------
+
+Dataset        IMG Sign   AMP      Chain    Cosine
+----------------------------------------------------------
+LFW            96.27%     90.45%   95.12%   95.53%
+AgeDB-30       78.80%     74.22%   72.87%   77.22%
+CALFW          78.73%     74.92%   76.87%   78.32%
+CPLFW          76.85%     68.88%   75.23%   74.62%
+Combined       81.02%     77.41%   79.30%   79.49%
+
+----------------------------------------------------------
+
+ArcFace Evaluation
+(Relational Metric Tested on External Embedding)
+----------------------------------------------------------
+
+Dataset        IMG Sign   AMP      Chain    Cosine
+----------------------------------------------------------
+LFW            99.58%     99.48%   97.02%   99.82%
+AgeDB-30       96.85%     93.92%   73.62%   98.07%
+CALFW          95.62%     94.52%   84.18%   96.10%
+CPLFW          93.22%     91.33%   77.13%   94.45%
+
+Observation
+
+Cosine remains the best metric for ArcFace because ArcFace
+is explicitly optimized using Angular Margin Loss.
+
+However, IMG Sign remains highly competitive despite never
+being used during ArcFace training.
+
+----------------------------------------------------------
+
+Main Finding
+----------------------------------------------------------
+
+Results suggest that
+
+Similarity Metric
+
+and
+
+Embedding Loss Function
+
+should be considered together.
+
+Embeddings trained with Angular Margin Loss naturally favor
+cosine similarity.
+
+Embeddings trained with the proposed relational loss naturally
+favor IMG Sign.
+
+Therefore,
+
+there is no universally best similarity metric.
+
+The optimal metric depends on how the embedding space
+is learned.
+
+----------------------------------------------------------
+
+IMG Sign Score
+----------------------------------------------------------
+
+def img_sign_score_np(e1, e2):
+
+    n = len(e1) - WINDOW_SIZE + 1
+
+    mc = 0
+
+    for i in range(n):
+
+        s1 = np.where(e1[i:i+WINDOW_SIZE] >= 0, 1, -1)
+
+        s2 = np.where(e2[i:i+WINDOW_SIZE] >= 0, 1, -1)
+
+        if np.sum(s1 == s2) >= THRESHOLD:
+
+            mc += 1
+
+    return mc / n
+
+----------------------------------------------------------
+
+AMP IMG Score
+----------------------------------------------------------
+
+def amp_img_score_np(e1, e2):
+
+    n = len(e1) - WINDOW_SIZE + 1
+
+    total = 0
+
+    for i in range(n):
+
+        w1 = e1[i:i+WINDOW_SIZE]
+
+        w2 = e2[i:i+WINDOW_SIZE]
+
+        s1 = np.where(w1 >= 0, 1, -1)
+
+        s2 = np.where(w2 >= 0, 1, -1)
+
+        if np.sum(s1 == s2) >= THRESHOLD:
+
+            a1 = np.mean(np.abs(w1))
+
+            a2 = np.mean(np.abs(w2))
+
+            total += max(
+
+                0,
+
+                1 - abs(a1-a2)/max(a1,a2,1e-6)
+
+            )
+
+    return total / n
+
+----------------------------------------------------------
+
+Chain Score
+----------------------------------------------------------
+
+def chain_score_np(e1, e2):
+
+    n = len(e1) - WINDOW_SIZE + 1
+
+    flags = []
+
+    for i in range(n):
+
+        ...
+
+    total = sum(flags)
+
+    img_sign = total / n
+
+    ...
+
+    avg_chain = total / n_chains
+
+    diff = avg_chain - NEUTRAL_LEN
+
+    score = img_sign + (
+
+        REWARD_RATE * diff
+
+        if diff >= 0
+
+        else PUNISH_RATE * diff
+
+    ) / 100
+
+    return np.clip(score,0,1)
+
+----------------------------------------------------------
+
+Conclusion
+----------------------------------------------------------
+
+IMG is proposed as an alternative similarity metric rather
+than a replacement for cosine similarity.
+
+Experiments indicate that cosine similarity performs best
+for embeddings trained with angular-margin objectives,
+while IMG Sign performs best for embeddings trained with
+the proposed relational objective.
+
+The framework is model-agnostic and can be applied to
+embeddings generated by different architectures.
+
+----------------------------------------------------------
+
+Zenodo
+
+https://doi.org/10.5281/zenodo.20748457
+
+GitHub
+
+https://github.com/imamgh11/imgnet
+
+License
+
+MIT
