@@ -2,7 +2,8 @@
 
 **A Universal Similarity Metric for Computer Vision**
 
-[![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.20748457-blue)](https://doi.org/10.5281/zenodo.20748457)
+[![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.21232756-blue)](https://doi.org/10.5281/zenodo.21232756)
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 **Author:** Imam Ghozali — Independent Researcher
@@ -340,7 +341,9 @@ pip install torch torchvision facenet-pytorch insightface Pillow numpy scikit-le
 ```
  
 ### 2. Download checkpoint
- 
+
+download link:
+ https://zenodo.org/records/21232756
 Place `best_model_epoch39_plateau.pth` in your working directory.
  
 ### 3. Eval on LFW
