@@ -10,7 +10,7 @@ import torch.nn.functional as F
 from facenet_pytorch import MTCNN
 
 # ── Config ────────────────────────────────────────
-CKPT_PATH   = r"C:\PythonProj\img_bnn\checkpoints_sw357_conv10\SW357_conv10\best_model_epoch15.pth"
+CKPT_PATH   = r"C:\yourpath.pth"
 WINDOW_SIZE = 11
 THRESHOLD   = 8
 EMB_DIM     = 1024
