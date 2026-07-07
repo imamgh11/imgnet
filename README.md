@@ -133,21 +133,6 @@ Three metrics, one threshold (from IMG Sign sweep):
 
 ---
 
-## Loss Function
-
-**IMG Sign MSE** — more stable than AMP MSE:
-
-```python
-loss_same = ((1.0 - img_sign_score(E1, E2)) ** 2).mean()  # push to 1.0
-loss_diff = (img_sign_score(E1, E2) ** 2).mean()           # push to 0.0
-```
-
-Stability comparison (epoch 29–50):
-
-| Loss | Peak | Floor | Variance |
-|------|------|-------|----------|
-| AMP MSE | 89.62% | 87.37% | ±2.25% |
-| IMG Sign MSE | 89.53% | 89.13% | **±0.40%** |
 
 ---
 
