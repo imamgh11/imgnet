@@ -372,6 +372,14 @@ Three metrics, one threshold (from IMG Sign sweep):
 ```
  
 ---
+## Domain-Agnostic Potential (Beyond Computer Vision)
+
+While evaluated on face verification, the core mathematics of the **IMG Framework** are inherently domain-agnostic. Because it discards absolute magnitude dependency and focuses entirely on local sign-pattern agreements, this framework can be generalized to non-visual embeddings:
+
+*   **Audio & Speech Processing:** By applying IMG to audio spectrogram embeddings, the metric can eliminate amplitude/volume variations (gain changes), establishing a noise-robust framework for voice biometrics.
+*   **Structural Bioinformatics:** In protein structural analysis, exact physical distances fluctuate due to environment/simulations. IMG can be applied to capture invariant relational topology patterns between amino acids rather than relying on strict absolute spatial coordinates.
+
+---
 
 ## Conclusion
 
