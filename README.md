@@ -45,16 +45,18 @@ GAP → FC(256→1024) → BN
 
 ## Results
 
-### Benchmark (LFW pre-aligned 112×112)
+### Benchmark (LFW pre-aligned 112×112, epoch 39 plateau)
 
-| Dataset | IMG Sign | AMP IMG | Chain | Cosine |
-|---------|----------|---------|-------|--------|
-| LFW | **96.27%** | — | **96.27%** | 95.53% |
-| AgeDB-30 | 78.80% | — | 78.62% | 77.22% |
-| CALFW | 78.73% | — | 78.82% | 78.32% |
-| CPLFW | 76.85% | — | 76.88% | 74.62% |
+| Dataset | IMG Sign | AMP | Chain | Vote 1/3 | Vote 2/3 | Cosine |
+|---------|----------|-----|-------|----------|----------|--------|
+| LFW | **96.27%** | 90.45% | 95.12% | **96.27%** | 95.13% | 95.53% |
+| AgeDB-30 | 78.80% | 74.22% | 72.87% | 78.80% | 74.73% | 77.22% |
+| CALFW | 78.73% | 74.92% | 76.87% | 78.73% | 77.15% | 78.32% |
+| CPLFW | 76.85% | 68.88% | 75.23% | 76.85% | 75.25% | 74.62% |
+| Combined | 81.02% | 77.41% | 79.30% | 81.02% | 79.47% | 79.49% |
 
-*Trained on CASIA-WebFace (490k images, 10,572 identities)*
+*Trained on CASIA-WebFace (490k images, 10,572 identities)*  
+*Threshold from IMG Sign Score sweep — AMP and Chain use the same threshold*
 
 ### Comparison with Pretrained Models
 
@@ -147,10 +149,12 @@ Stability comparison (epoch 29–50):
 ## Citation
 
 ```
-Ghozali, I. (2026). IMGNet: A Lightweight Multi-Scale Relational Sliding 
-Window Backbone for Face Verification. Independent Researcher.
-imam.gh98@gmail.com
+Ghozali, I. (2026). IMG: Index-Based Match Scoring with Grade — 
+A Novel Similarity Metric for Face Verification. 
+Zenodo. https://doi.org/10.5281/zenodo.20748457
 ```
+
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20748457.svg)](https://zenodo.org/records/20748457)
 
 ---
 
