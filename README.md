@@ -68,7 +68,12 @@ GAP → FC(256→1024) → BN
 
 ---
 
-## Files
+## Datasets
+
+| Dataset | Link | Description |
+|---------|------|-------------|
+| CASIA-WebFace aligned | [Kaggle](https://www.kaggle.com/datasets/luongkhang04/aligned-casia) | Training dataset, aligned & cropped, 490k images, 10,572 identities |
+| Benchmark (LFW/AgeDB/CALFW/CPLFW) | [Kaggle](https://www.kaggle.com/datasets/yakhyokhuja/agedb-30-calfw-cplfw-lfw-aligned-112x112) | Validation datasets, pre-aligned 112×112 |
 
 ```
 train/
