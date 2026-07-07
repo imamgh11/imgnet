@@ -1,4 +1,3 @@
-==========================================================
 IMG — Relational Pattern-Based Similarity Metric
 A Universal Similarity Metric for Computer Vision
 ==========================================================
