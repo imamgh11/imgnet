@@ -383,8 +383,9 @@ IMG is proposed as an alternative similarity metric rather than a replacement fo
 
 If you use this work, please cite via:
 
-- **Zenodo (DOI):** https://doi.org/10.5281/zenodo.20748457
+- **Zenodo (DOI):** https://doi.org/10.5281/zenodo.21232755
 - **GitHub:** https://github.com/imamgh11/imgnet
+- **Hugging Face:** https://huggingface.co/imghost11/imgnetV1
 
 ---
 
