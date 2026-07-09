@@ -1,4 +1,3 @@
-<img width="1551" height="606" alt="image" src="https://github.com/user-attachments/assets/d71d51b2-8c9a-497e-926f-bc2b486616bc" /># IMG — Relational Pattern-Based Similarity Metric
 
 **A Universal Similarity Metric for Computer Vision**
 
