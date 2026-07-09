@@ -1,4 +1,4 @@
-# IMG — Relational Pattern-Based Similarity Metric
+<img width="1551" height="606" alt="image" src="https://github.com/user-attachments/assets/d71d51b2-8c9a-497e-926f-bc2b486616bc" /># IMG — Relational Pattern-Based Similarity Metric
 
 **A Universal Similarity Metric for Computer Vision**
 
@@ -38,6 +38,12 @@ This linguistic observation inspired the central hypothesis of this work:
 Instead of forcing embeddings to occupy a specific angular position, the proposed method trains the network to preserve **local relational consistency**.
 
 Consequently, similarity is evaluated by comparing relational patterns rather than absolute vector orientation.
+
+<img width="1907" height="848" alt="image" src="https://github.com/user-attachments/assets/dc9610ae-6666-45e8-b1ae-ada814d91d92" />
+
+
+<img width="1907" height="981" alt="image" src="https://github.com/user-attachments/assets/16c28b28-a768-4665-b426-33fb00579856" />
+
 
 ---
 
@@ -370,7 +376,43 @@ Three metrics, one threshold (from IMG Sign sweep):
 1/3 pass        → ⚠️  UNCERTAIN
 0/3 pass        → ❌ DIFFERENT
 ```
- 
+---
+Experimental Findings (Preliminary)
+
+<img width="1551" height="606" alt="image" src="https://github.com/user-attachments/assets/1c95c525-cdc9-4eb7-8aca-8327ea863b7d" />
+same person
+
+
+<img width="1540" height="624" alt="image" src="https://github.com/user-attachments/assets/878663d7-f762-4faa-8349-8793e889f197" />
+diff person
+
+During development of the interactive ablation visualizer, a preliminary observation was made using the custom polygon occlusion tool:
+
+Observation: Region-specific embedding sensitivity
+
+When occluding specific facial regions (e.g., right eye) using a custom polygon mask and comparing the resulting embedding changes across two different individuals:
+
+
+Same person, different photos: occluding the same region produces delta spikes at similar embedding dimensions across both photos
+Different people: occluding the same region produces delta spikes at different embedding dimensions, or in some cases near-zero delta for one person (e.g., when glasses obscure the region)
+
+
+Example (custom polygon, right eye region):
+
+Same person:
+  Photo 1: changed 4/1014 windows = 0.4%  spike_delta: 110
+  Photo 2: changed 1/1014 windows = 0.1%  spike_delta: 100
+  → spike locations visually correlated
+
+Different people:
+  Photo 1: changed 4/1014 windows = 0.4%  spike_delta: 110
+  Photo 2: changed 0/1014 windows = 0.0%  spike_delta: 97
+  → spike locations differ significantly
+
+This observation suggests that the IMG Sign MSE loss function, through its overlapping sliding window structure, may induce implicit spatial organization in the embedding space — where different facial regions influence different embedding dimensions. However, this has not yet been formally tested and should be treated as a preliminary observation pending rigorous evaluation.
+
+
+⚠️ This is an informal observation from the visualization tool, not a validated experimental result. Formal ablation study with multiple identities and statistical analysis is planned as future work.
 ---
 ## Domain-Agnostic Potential (Beyond Computer Vision)
 
