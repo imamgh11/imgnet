@@ -345,10 +345,10 @@ app/
 pip install torch torchvision facenet-pytorch insightface Pillow numpy scikit-learn
 ```
  
-### 2. Download checkpoint
+### 2. Download Model
 
 download link:
- https://zenodo.org/records/21232756
+get on hugging face below
 Place `best_model_epoch39_plateau.pth` in your working directory.
  
 ### 3. Eval on LFW
