@@ -421,6 +421,42 @@ While evaluated on face verification, the core mathematics of the **IMG Framewor
 *   **Structural Bioinformatics:** In protein structural analysis, exact physical distances fluctuate due to environment/simulations. IMG can be applied to capture invariant relational topology patterns between amino acids rather than relying on strict absolute spatial coordinates.
 
 ---
+## ONNX Export
+
+IMGNet Conv10 is available in ONNX format for deployment without PyTorch.
+
+**Why it was non-trivial to export:**
+SW Block uses non-standard operations (boolean mask indexing + reflect padding) that are not directly ONNX-compatible. The solution: boolean mask replaced with explicit neighbor loops, and reflect padding emulated via `flip + concat` — mathematically identical but fully ONNX-safe across all runtimes.
+
+**Verification:**
+```
+PyTorch vs ONNX cosine similarity : 1.000000
+PyTorch vs ONNX max difference    : 0.00000033
+```
+
+**Inference:**
+```python
+import onnxruntime as rt
+import numpy as np
+
+sess     = rt.InferenceSession("imgnet_conv10_epoch39.onnx")
+inp_name = sess.get_inputs()[0].name
+
+# img: np.uint8 (112, 112, 3) — face aligned to 112×112
+t   = img.astype(np.float32) / 255.0
+t   = t.transpose(2, 0, 1)[np.newaxis]    # (1, 3, 112, 112)
+emb = sess.run(None, {inp_name: t})[0][0]  # (1024,)
+```
+
+**Threshold** (from LFW benchmark sweep, epoch 39): `0.79`
+
+```python
+n_pass = sum([img_sign(e1,e2) >= 0.79,
+              amp_img(e1,e2)  >= 0.79,
+              chain(e1,e2)    >= 0.79])
+# 2/3 or 3/3 → MATCH | 1/3 → UNCERTAIN | 0/3 → DIFFERENT
+```
+---
 
 ## Conclusion
 
